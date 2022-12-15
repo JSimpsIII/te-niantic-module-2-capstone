@@ -8,15 +8,10 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-public class AuthenticationService
+public class AuthenticationService extends AuthenticatedApiService<UserCredentials>
 {
 
-    private final String baseUrl;
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    public AuthenticationService(String url)
-    {
-        this.baseUrl = url;
+    public AuthenticationService() {
     }
 
     public AuthenticatedUser login(UserCredentials credentials)

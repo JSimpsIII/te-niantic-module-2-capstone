@@ -123,6 +123,12 @@ public class JdbcUserDao implements UserDao
         return true;
     }
 
+    @Override
+    public BigDecimal getCurrentBalance(){
+        sql =
+        return STARTING_BALANCE;
+    }
+
     private User mapRowToUser(SqlRowSet rs)
     {
         User user = new User();

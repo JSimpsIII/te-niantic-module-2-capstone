@@ -2,18 +2,27 @@ package com.techelevator.tenmo.controllers;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.services.AuthenticatedApiService;
 import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.services.UserService;
 import com.techelevator.tenmo.views.UserOutput;
 
 public class TenmoApp
 {
-
-    private static final String API_BASE_URL = "http://localhost:8080/";
+    public TenmoApp() {
+        String API_BASE_URL = "http://localhost:8080/";
+        AuthenticatedApiService.setBaseUrl(API_BASE_URL);
+    }
 
     private final UserOutput userOutput = new UserOutput();
-    private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final AuthenticationService authenticationService = new AuthenticationService();
 
     private AuthenticatedUser currentUser;
+
+    private UserService userService = new UserService();
+
+
+
 
     public void run()
     {
@@ -113,8 +122,7 @@ public class TenmoApp
 
     private void viewCurrentBalance()
     {
-        // TODO Auto-generated method stub
-
+        System.out.println(userService.getCurrentBalance());
     }
 
     private void viewTransferHistory()
