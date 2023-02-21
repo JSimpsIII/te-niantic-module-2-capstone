@@ -14,7 +14,10 @@ public interface UserDao
 
     User findByUsername(String username);
 
+    //principal
     int findIdByUsername(String username);
+
+    BigDecimal getCurrentBalance();
 
     boolean create(String username, String password);
 

@@ -1,14 +1,23 @@
 package com.techelevator.tenmo.controllers;
 
+<<<<<<< HEAD
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticatedApiService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.UserService;
+=======
+import com.techelevator.tenmo.models.*;
+import com.techelevator.tenmo.services.*;
+>>>>>>> kayla
 import com.techelevator.tenmo.views.UserOutput;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public class TenmoApp
 {
+<<<<<<< HEAD
     public TenmoApp() {
         String API_BASE_URL = "http://localhost:8080/";
         AuthenticatedApiService.setBaseUrl(API_BASE_URL);
@@ -17,7 +26,23 @@ public class TenmoApp
     private final UserOutput userOutput = new UserOutput();
     private final AuthenticationService authenticationService = new AuthenticationService();
 
+=======
+
+    //private static final String API_BASE_URL = "http://localhost:8080/";
+    //AuthenticatedApiService.setBaseUrl(API_BASE_URL);
+    private final UserOutput userOutput = new UserOutput();
+    private final AuthenticationService authenticationService = new AuthenticationService();
+    private final UserService userService = new UserService();
+>>>>>>> kayla
     private AuthenticatedUser currentUser;
+    private final AccountService accountService = new AccountService();
+    private final TransferService transferService = new TransferService();
+//
+//
+    public TenmoApp() {
+        String API_BASE_URL = "http://localhost:8080/";
+        AuthenticatedApiService.setBaseUrl(API_BASE_URL);
+    }
 
     private UserService userService = new UserService();
 
@@ -75,6 +100,7 @@ public class TenmoApp
     {
         UserCredentials credentials = userOutput.promptForCredentials();
         currentUser = authenticationService.login(credentials);
+        AuthenticatedApiService.setAuthToken(currentUser.getToken());
         if (currentUser == null)
         {
             userOutput.printErrorMessage();
@@ -94,7 +120,9 @@ public class TenmoApp
             }
             else if (menuSelection == 2)
             {
-                viewTransferHistory();
+                int userId = currentUser.getUser().getId();
+                int accountId = accountService.getAccountById(userId).getAccountId();
+                viewTransferHistory(accountId);
             }
             else if (menuSelection == 3)
             {
@@ -102,7 +130,13 @@ public class TenmoApp
             }
             else if (menuSelection == 4)
             {
-                sendBucks();
+                if (accountService.getCurrentBalance(currentUser.getUser().getUsername()).equals(BigDecimal.ZERO)){
+                    System.out.println("Account empty. Please choose a different option");
+                    mainMenu();
+                }
+                else {
+                    sendBucks();
+                }
             }
             else if (menuSelection == 5)
             {
@@ -122,13 +156,30 @@ public class TenmoApp
 
     private void viewCurrentBalance()
     {
+<<<<<<< HEAD
         System.out.println(userService.getCurrentBalance());
+=======
+        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getUsername());
+        //BigDecimal balance = transferService.getCurrentBalance(currentUser.getUser().getUsername());
+
+        userOutput.showBalance(balance);
+>>>>>>> kayla
     }
 
-    private void viewTransferHistory()
+    //id, stats, type is 0
+    private void viewTransferHistory(int accountId)
     {
         // TODO Auto-generated method stub
+        List<Transfer> transfers = transferService.getAllTransfers(accountId);
 
+        userOutput.displayTransfers(transfers);
+
+
+        int transferSelection = userOutput.promptForInt("Select transfer ID to view more details.");
+
+        Transfer transfer = transferService.checkTransfer(transferSelection);
+
+        userOutput.displayThisTransfer(transfer);
     }
 
     private void viewPendingRequests()
@@ -137,11 +188,102 @@ public class TenmoApp
 
     }
 
+
+    //can not create transfer
     private void sendBucks()
     {
         // TODO Auto-generated method stub
+        int userSelection = -1;
+
+        BigDecimal moneyToSend;
+
+        BigDecimal userBalance = accountService.getCurrentBalance(currentUser.getUser().getUsername());
+
+        List<User> users = userService.getAllUsers();
+
+        userOutput.displayUsers(users);
+
+        while (userSelection != 0)
+        {
+            userSelection = userOutput.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
+
+            //User user = users.get(menuSelection);
+
+            //change number 0
+            if(userSelection != 0) {
+                if(userSelection == currentUser.getUser().getId()){
+                    System.out.println("Invalid Option");
+                    sendBucks();
+                }
+                moneyToSend = userOutput.promptForBigDecimal("Enter amount to send: ");
+
+                BigDecimal validMoneyAmount = userOutput.verifyValidMoneyAmount(userBalance, moneyToSend);
+
+//                for (User user : users) {
+//
+//                    if (menuSelection == user.getId()) {
+//                        accountService.sendMoney(menuSelection, moneyToSend);
+//                        System.out.println(accountService.getCurrentBalance(user.getUsername()));
+////                        transferMoney(menuSelection);
+////                        System.out.println("++++++++++++++++++");
+////                        BigDecimal n = accountService.getAccountById(menuSelection).getBalance();
+////                        System.out.println();
+//                    }
+//                }
+                //get current user account
+                Account currentAccount = accountService.getAccountById(currentUser.getUser().getId());
+                //get receive user account
+                Account receiverAccount = accountService.getAccountById(userSelection);
+
+                Transfer newTransfer = new Transfer(currentAccount.getAccountId(), receiverAccount.getAccountId(), validMoneyAmount);
+
+                transferService.createSendTransfer(newTransfer);
+
+
+            }
+            else
+            {
+                mainMenu();
+            }
+
+            //System.out.println("invalid input");
+
+
+//            for (User user : users) {
+//
+//                if (menuSelection == user.getId())
+//                {
+////                    transferMoney(menuSelection);
+//                    System.out.println(menuSelection);
+//                }
+//                else if (menuSelection == 2)
+//                {
+//                    mainMenu();
+//                }
+//                else
+//                {
+//                    System.out.println("Invalid Selection");
+//                }
+//            }
+
+
+            userOutput.pause();
+            System.out.println("Transfer Approved!");
+            mainMenu();
+        }
 
     }
+
+
+//    private BigDecimal transferMoney(int id) {
+//        String value = userOutput.askMoney();
+//        BigDecimal transferAmount = BigDecimal.valueOf(Long.parseLong(value));
+//        Account account = accountService.getAccountById(id);
+//        BigDecimal updatedBalance = account.addBalance(transferAmount);
+//        return updatedBalance;
+//
+//
+//    }
 
     private void requestBucks()
     {

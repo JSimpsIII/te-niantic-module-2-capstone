@@ -5,7 +5,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+<<<<<<< HEAD
 public abstract class AuthenticatedApiService<T> {
+=======
+public abstract class AuthenticatedApiService<T>
+{
+>>>>>>> kayla
 
     public static String baseUrl;
     protected final RestTemplate restTemplate = new RestTemplate();

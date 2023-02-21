@@ -47,6 +47,19 @@ public class JdbcUserDao implements UserDao
     }
 
     @Override
+    public BigDecimal getCurrentBalance() {
+        String sql = "SELECT balance from account";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+
+        if(results.next()){
+            return results.getBigDecimal("balance");
+        }
+        return STARTING_BALANCE;
+
+    }
+
+    @Override
     public User getUserById(int userId)
     {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?";
@@ -123,11 +136,15 @@ public class JdbcUserDao implements UserDao
         return true;
     }
 
+<<<<<<< HEAD
     @Override
     public BigDecimal getCurrentBalance(){
         sql =
         return STARTING_BALANCE;
     }
+=======
+
+>>>>>>> kayla
 
     private User mapRowToUser(SqlRowSet rs)
     {

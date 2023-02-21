@@ -11,8 +11,19 @@ import org.springframework.web.client.RestTemplate;
 public class AuthenticationService extends AuthenticatedApiService<UserCredentials>
 {
 
+<<<<<<< HEAD
     public AuthenticationService() {
     }
+=======
+    //private final String baseUrl;
+//    public static String baseUrl;
+//    private final RestTemplate restTemplate = new RestTemplate();
+//
+//    public AuthenticationService(String url)
+//    {
+//        baseUrl = url;
+//    }
+>>>>>>> kayla
 
     public AuthenticatedUser login(UserCredentials credentials)
     {
@@ -53,4 +64,5 @@ public class AuthenticationService extends AuthenticatedApiService<UserCredentia
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(credentials, headers);
     }
+
 }
